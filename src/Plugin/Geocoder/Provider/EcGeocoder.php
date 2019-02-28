@@ -40,7 +40,8 @@ class EcGeocoder extends ProviderBase {
         $args = array('@status' => $data->status, '@address' => $source);
         $message = t('Webtools Geocoder API returned zero results on @address status.\nStatus: @status', $args);
         \Drupal::logger('ec_geocoder')->notice($message);
-      } elseif (isset ($data->responseMessage) && $data->responseMessage != 'OK') {
+      }
+      elseif (isset ($data->responseMessage) && $data->responseMessage != 'OK') {
         $args = array('@status' => $data->responseMessage);
         $message = t('Webtools Geocoder API returned bad status.\nStatus: @status', $args);
         \Drupal::logger('ec_geocoder')->warning($message);
@@ -69,4 +70,5 @@ class EcGeocoder extends ProviderBase {
   }
 
   public function doReverse($latitude, $longitude) {}
+
 }
