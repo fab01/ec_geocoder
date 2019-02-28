@@ -1,6 +1,6 @@
 name: EC Geocoder
 type: module
-description: Allows using geocoder service provided by EC webtools.
+description: Allows the usage of EC Corporate geocoding service.
 # core: 8.x
 dependencies:
   - geocoder:geocoder

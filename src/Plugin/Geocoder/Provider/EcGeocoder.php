@@ -20,7 +20,7 @@ class EcGeocoder extends ProviderBase {
 
     try {
       $chars = [" ", ","];
-      $query = trim(rtrim(str_replace($chars, '+', $source)));
+      $query = trim(str_replace($chars, '+', $source));
       $url = "http://europa.eu/webtools/rest/geocoding/?address=" . $query;
 
       $request = \Drupal::httpClient()->get($url, array('headers' => array('Accept' => 'application/json')));
@@ -29,8 +29,8 @@ class EcGeocoder extends ProviderBase {
 
       if ($data->responseCode !== 200) {
         $args = array(
-          '@code' => $response->errorCode,
-          '@error' => $response->errorMessage,
+          '@code' => $response->responseCode,
+          '@error' => $response->responseMessage,
         );
         $message = t('HTTP request to Webtools Geocoder API failed.\nCode: @code\nError: @error', $args);
         \Drupal::logger('ec_geocoder')->error($message);
@@ -40,6 +40,10 @@ class EcGeocoder extends ProviderBase {
         $args = array('@status' => $data->status, '@address' => $source);
         $message = t('Webtools Geocoder API returned zero results on @address status.\nStatus: @status', $args);
         \Drupal::logger('ec_geocoder')->notice($message);
+      } elseif (isset ($data->responseMessage) && $data->responseMessage != 'OK') {
+        $args = array('@status' => $data->responseMessage);
+        $message = t('Webtools Geocoder API returned bad status.\nStatus: @status', $args);
+        \Drupal::logger('ec_geocoder')->warning($message);
       }
 
       $geometries = array();
